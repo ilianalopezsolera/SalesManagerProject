@@ -1,61 +1,94 @@
 package salesmanager;
 
-import java.util.Date;
-
 /**
+ * Class for sale. It contains attributes and constructors.
  *
  * @author ilico
  */
 public class Sale {
 
-    private String product;
-    private String channel;
+    private String productName;
     private int quantity;
-    private Date date;
+    private int day;
+    private int channel;
 
-    public Sale(String product, String channel, int quantity, Date date) {
-        this.product = product;
-        this.channel = channel;
+    public Sale(String productName, int quantity, int day, int channel) {
+        this.productName = productName;
         this.quantity = quantity;
-        this.date = date;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
+        this.day = day;
         this.channel = channel;
     }
 
+    /**
+     * This method gets the name of the product
+     *
+     * @return
+     */
+    public String getProductName() {
+        return productName;
+    }
+
+    /**
+     * This method allows to change the name of a product
+     *
+     * @param productName
+     */
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    /**
+     * This method gets the quantity of sales of a product
+     *
+     * @return
+     */
     public int getQuantity() {
         return quantity;
     }
 
+    /**
+     * This method allows to change the quantity of sales of a product
+     *
+     * @param quantity
+     */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public Date getDate() {
-        return date;
+    /**
+     * This method gets the day of the month in which the sale was made
+     *
+     * @return
+     */
+    public int getDay() {
+        return day;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    /**
+     * This method allows to change the quantity of sales of a product
+     *
+     * @param day
+     */
+    public void setDay(int day) {
+        this.day = day;
     }
 
-    @Override
-    public String toString() {
-        return "Sale" + "product = " + product + ", channel = " + channel +
-                ", quantity = " + quantity + ", date = " + date;
+    /**
+     * This method gets the type of channel in which the sale was made
+     *
+     * @return
+     */
+    public int getChannel() {
+        return channel;
     }
-    
+
+    /**
+     * This method allows to change the type of channel of a product
+     *
+     * @param channel
+     */
+    public void setChannel(int channel) {
+        this.channel = channel;
+    }
+
 }
