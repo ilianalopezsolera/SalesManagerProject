@@ -4,3 +4,4 @@ Día 1: Base líquida, Canal: En Línea, Cantidad: 10
 Día 25: Base líquida, Canal: En Línea, Cantidad: 4
 Día 25: Base líquida, Canal: Físico, Cantidad: 4
 Día 25: Polvo Compacto, Canal: Físico, Cantidad: 4
+Día 6: Gel para cejas, Canal: Físico, Cantidad: 5

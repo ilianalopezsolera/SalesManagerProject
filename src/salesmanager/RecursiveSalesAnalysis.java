@@ -44,7 +44,8 @@ public class RecursiveSalesAnalysis {
      * @return The average sales between the specified days. Returns 0.0 if no
      * sales are recorded.
      */
-    public double calculateAverageSales(int startDay, int endDay, int totalSales, int count) {
+    public double calculateAverageSales(int startDay, int endDay, int totalSales,
+            int count) {
         // Base de la recursión
         if (startDay >= endDay) {
             if (count == 0) {
@@ -55,51 +56,58 @@ public class RecursiveSalesAnalysis {
         }
 
         try {
-            // Obtener las ventas totales del día actual para todos los productos
-            int dailySales = saleManagement.getTotalSales(startDay, null); // null para obtener ventas de todos los productos
+            // Obtener las ventas totales del día actual para todos 
+            // los productos
+            int dailySales = saleManagement.getTotalSales(startDay, null);
 
             // Llamada recursiva con acumulación de ventas y días
-            return calculateAverageSales(startDay + 1, endDay, totalSales + dailySales, count + 1);
+            return calculateAverageSales(startDay + 1, endDay, totalSales
+                    + dailySales, count + 1);
         } catch (Exception e) {
-            System.out.println("Error al procesar el día " + startDay + ": " + e.getMessage());
+            System.out.println("Error al procesar el día " + startDay + ": "
+                    + e.getMessage());
             // Continuar al siguiente día
-            return calculateAverageSales(startDay + 1, endDay, totalSales, count);
+            return calculateAverageSales(startDay + 1, endDay, totalSales,
+                    count);
         }
     }
 
     /**
-     * Detects sales trends for a specific product over a month (30 days) and
-     * returns a summary. This method initializes the recursive trend detection
-     * process.
+     * Initializes the recursive process for detecting sales trends of a
+     * specific product over a 30-day period. This method starts the trend
+     * detection by invoking the `detectTrendRecursive` method.
      *
      * @param productName The name of the product to analyze trends for.
-     * @return A string summarizing the trends, including increases, decreases,
-     * and consistent sales.
+     * @return A string summarizing the detected trends over the 30-day period,
+     * including any increases, decreases, or periods of constant sales.
      */
     public String detectTrends(String productName) {
         StringBuilder trends = new StringBuilder();
-        detectTrendRecursive(productName, 0, -1, 0, "", trends);  // Inicia la recursión
+        detectTrendRecursive(productName, 0, -1, 0, "Indefinido", trends);
         return trends.toString();
     }
 
     /**
-     * Recursively detects sales trends for a specific product over the given
-     * period.
+     * Recursively detects sales trends for a specific product over a 30-day
+     * period. If no sales are registered on a given day, it keeps the previous
+     * trend until there is a significant change in sales (increase, decrease,
+     * or constant).
      *
-     * @param productName The name of the product to analyze trends for.
+     * @param productName The name of the product to analyze sales trends for.
      * @param day The current day being analyzed (0-based index for days).
-     * @param prevSales The sales total for the previous day. Used to determine
+     * @param prevSales The total sales from the previous day. Used to detect
      * trends.
-     * @param streak The current streak of consecutive days for a particular
-     * trend.
+     * @param streak The current streak of consecutive days with the same trend.
      * @param trend The current trend (e.g., "Increase", "Decrease", or
      * "Constant").
-     * @param trends A StringBuilder used to accumulate descriptions of detected
-     * trends.
+     * @param trends A StringBuilder used to accumulate the descriptions of
+     * detected trends.
      */
-    public void detectTrendRecursive(String productName, int day, int prevSales, int streak, String trend, StringBuilder trends) {
+    public void detectTrendRecursive(String productName, int day, int prevSales,
+            int streak, String trend, StringBuilder trends) {
+
+        // Si hemos recorrido los 30 días, terminamos la recursión
         if (day >= 30) {
-            // Al final del mes, imprime las tendencias acumuladas
             if (streak > 1) {
                 trends.append("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.\n");
             }
@@ -109,8 +117,15 @@ public class RecursiveSalesAnalysis {
         // Obtener las ventas del día para el producto especificado
         int totalSales = getTotalSalesForDay(productName, day);
 
-        // Si no hay ventas para ese día y producto, simplemente pasamos al siguiente día
+        // Mostrar las ventas para el día en depuración
+        System.out.println("Día " + (day + 1) + " - Ventas: " + totalSales);
+
+        // Si no hay ventas para ese día y producto, tratamos de mantener la tendencia anterior
         if (totalSales == 0) {
+            if (streak > 1) {
+                trends.append("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.\n");
+            }
+            trends.append("Día " + (day + 1) + ": No se registraron ventas.\n"); // Mostrar el día sin ventas
             detectTrendRecursive(productName, day + 1, prevSales, streak, trend, trends);
             return;
         }
@@ -156,6 +171,7 @@ public class RecursiveSalesAnalysis {
             }
         }
 
+        // Llamar de nuevo a la recursión para el siguiente día
         detectTrendRecursive(productName, day + 1, totalSales, streak, trend, trends);
     }
 
@@ -170,23 +186,28 @@ public class RecursiveSalesAnalysis {
     public int getTotalSalesForDay(String productName, int day) {
         int totalSales = 0;
 
-        // Leer el archivo de ventas y buscar las ventas para el día y producto específico
+        // Leer el archivo de ventas y buscar las ventas para el día y
+        // producto específico
         try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Comprobar si la línea corresponde al producto y al día que estamos buscando
-                if (line.startsWith("Día " + (day + 1) + ":") && line.contains(productName)) {
+                // Comprobar si la línea corresponde al producto y al día que
+                // estamos buscando
+                if (line.startsWith("Día " + (day + 1) + ":")
+                        && line.contains(productName)) {
                     String[] parts = line.split(", ");
                     String recordedProduct = parts[0].split(": ")[1];
                     int quantity = Integer.parseInt(parts[2].split(": ")[1]);
 
                     if (recordedProduct.equals(productName)) {
-                        totalSales += quantity;  // Sumar las ventas de ese producto
+                        totalSales += quantity;  // Sumar las ventas
+                        // de ese producto
                     }
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error al leer el archivo de ventas: " + e.getMessage());
+            System.out.println("Error al leer el archivo de ventas: "
+                    + e.getMessage());
         }
 
         return totalSales;

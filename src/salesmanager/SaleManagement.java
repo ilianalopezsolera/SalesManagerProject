@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package salesmanager;
 
 import java.io.BufferedReader;
@@ -129,10 +125,19 @@ public class SaleManagement {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error al leer el archivo de ventas: " + e.getMessage());
+            System.out.println("Error al leer el archivo de ventas: "
+                    + e.getMessage());
         }
 
         return totalSales; // Total de ventas (puede ser 0 si no hay datos)
+    }
+
+    public int getTotalSalesForDay(String productName, int day) {
+        int productIndex = getProductIndex(productName);
+        if (productIndex != -1) {
+            return sales[day][productIndex][0] + sales[day][productIndex][1]; // Sumar ventas físicas y en línea
+        }
+        return 0;
     }
 
     /**
@@ -151,13 +156,13 @@ public class SaleManagement {
      * @param productName
      * @return
      */
-    private int getProductIndex(String productName) {
+    public int getProductIndex(String productName) {
         for (int i = 0; i < productNames.length; i++) {
             if (productNames[i].equals(productName)) {
                 return i;
             }
         }
-        return -1;// En caso de que no lo encuentre
+        return -1;
     }
 
 }

@@ -171,7 +171,7 @@ public class SalesManager {
                 salesTextArea.append("Detectando tendencias para el producto: "
                         + productName + "\n");
                // salesAnalysis.detectTrends(productName);
-               salesTextArea.append("Tendencias: " + salesAnalysis.detectTrends
+               salesTextArea.append(salesAnalysis.detectTrends
         (productName));
             }
         });
