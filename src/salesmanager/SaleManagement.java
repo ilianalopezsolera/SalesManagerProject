@@ -71,8 +71,7 @@ public class SaleManagement {
         int totalPhysicalSales = 0;
         int totalOnlineSales = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader
-        ("SalesRegister.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Día " + day + ":")) {
@@ -101,6 +100,30 @@ public class SaleManagement {
 
         return "Día " + day + ": " + productName + " - Tienda: "
                 + totalPhysicalSales + ", En línea: " + totalOnlineSales;
+    }
+
+    public int getTotalSales(int day, String productName) {
+        int totalSales = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Día " + day + ":")) {
+                    String[] parts = line.split(", ");
+                    String recordedProduct = parts[0].split(": ")[1];
+                    int quantity = Integer.parseInt(parts[2].split(": ")[1]);
+
+                    // Si no se especifica producto, sumar todas las ventas
+                    if (productName == null || recordedProduct.equals(productName)) {
+                        totalSales += quantity;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de ventas: " + e.getMessage());
+        }
+
+        return totalSales; // Total de ventas (puede ser 0 si no hay datos)
     }
 
     /**

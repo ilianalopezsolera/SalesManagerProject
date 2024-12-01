@@ -71,12 +71,15 @@ public class SalesManager {
         JButton registerSaleButton = new JButton("Registrar venta");
         registerSaleButton.setBackground(new Color(199, 21, 133));
         registerSaleButton.setForeground(Color.BLACK);
+        
         JButton showAverageButton = new JButton("Promedio de Ventas");
         showAverageButton.setBackground(new Color(199, 21, 133));
         showAverageButton.setForeground(Color.BLACK);
+        
         JButton detectTrendsButton = new JButton("Detectar Tendencias");
         detectTrendsButton.setBackground(new Color(199, 21, 133));
         detectTrendsButton.setForeground(Color.BLACK);
+        
         JButton totalButton = new JButton("Total de ventas");
         totalButton.setBackground(new Color(199, 21, 133));
         totalButton.setForeground(Color.BLACK);
@@ -141,9 +144,8 @@ public class SalesManager {
                             frame, "Ingresa el día final (1-30):"));
 
                     double averageSales = salesAnalysis.calculateAverageSales(
-                            productName, startDay - 1, endDay - 1);
-                    salesTextArea.append("Promedio de ventas de " + productName
-                            + " entre el día " + startDay + " y el día "
+                            startDay - 1, endDay - 1);
+                    salesTextArea.append("Promedio de ventas entre el día " + startDay + " y el día "
                             + endDay + ": " + averageSales + "\n");
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame, "Por favor ingresa un "
