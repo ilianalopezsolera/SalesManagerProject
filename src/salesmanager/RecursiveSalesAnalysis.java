@@ -88,29 +88,27 @@ public class RecursiveSalesAnalysis {
     }
 
     /**
-     * Recursively detects sales trends for a specific product over a 30-day
-     * period. If no sales are registered on a given day, it keeps the previous
-     * trend until there is a significant change in sales (increase, decrease,
-     * or constant).
+     * Recursively detects sales trends for a specific product over the given
+     * period, and suggests stock adjustments based on sales trends.
      *
-     * @param productName The name of the product to analyze sales trends for.
+     * @param productName The name of the product to analyze trends for.
      * @param day The current day being analyzed (0-based index for days).
-     * @param prevSales The total sales from the previous day. Used to detect
+     * @param prevSales The sales total for the previous day. Used to determine
      * trends.
-     * @param streak The current streak of consecutive days with the same trend.
+     * @param streak The current streak of consecutive days for a particular
+     * trend.
      * @param trend The current trend (e.g., "Increase", "Decrease", or
      * "Constant").
-     * @param trends A StringBuilder used to accumulate the descriptions of
-     * detected trends.
+     * @param trends A StringBuilder used to accumulate descriptions of detected
+     * trends and stock suggestions.
      */
     public void detectTrendRecursive(String productName, int day, int prevSales,
             int streak, String trend, StringBuilder trends) {
-
-        // Si hemos recorrido los 30 días, terminamos la recursión
         if (day >= 30) {
+            // Al final del mes, imprime las tendencias acumuladas
             if (streak > 1) {
-                trends.append("Tendencia continua: " + streak +
-                        " días consecutivos de " + trend + " ventas.\n");
+                trends.append("Tendencia continua: " + streak
+                        + " días consecutivos de " + trend + " ventas.\n");
             }
             return;
         }
@@ -118,19 +116,9 @@ public class RecursiveSalesAnalysis {
         // Obtener las ventas del día para el producto especificado
         int totalSales = getTotalSalesForDay(productName, day);
 
-        // Mostrar las ventas para el día en depuración
-        System.out.println("Día " + (day + 1) + " - Ventas: " + totalSales);
-
-        // Si no hay ventas para ese día y producto,
-        // tratamos de mantener la tendencia anterior
+        // Si no hay ventas para ese día y producto, simplemente pasamos al siguiente día
         if (totalSales == 0) {
-            if (streak > 1) {
-                trends.append("Tendencia continua: " + streak +
-                        " días consecutivos de " + trend + " ventas.\n");
-            }
-            trends.append("Día " + (day + 1) + ": No se registraron ventas.\n");
-            detectTrendRecursive(productName, day + 1, prevSales, streak,
-                    trend, trends);
+            detectTrendRecursive(productName, day + 1, prevSales, streak, trend, trends);
             return;
         }
 
@@ -142,12 +130,14 @@ public class RecursiveSalesAnalysis {
                     streak++;  // Continuar la racha de incremento
                 } else {
                     if (streak > 1) {
-                        trends.append("Tendencia continua: " + streak +
-                                " días consecutivos de " + trend + " ventas.\n");
+                        trends.append("Tendencia continua: " + streak
+                                + " días consecutivos de " + trend + " ventas.\n");
                     }
                     streak = 1;  // Nueva racha de incremento
                     trend = "Incremento";
-                    trends.append("Día " + (day + 1) + ": Incremento de ventas.\n"); 
+                    trends.append("Día " + (day + 1) + ": Incremento de ventas.\n"); // Mostrar incremento
+                    // Sugerir reposición de stock
+                    trends.append("Sugerencia: Considere reponer el stock de este producto debido al aumento de ventas.\n");
                 }
             } else if (totalSales < prevSales) {
                 // Disminución de ventas
@@ -155,12 +145,14 @@ public class RecursiveSalesAnalysis {
                     streak++;  // Continuar la racha de disminución
                 } else {
                     if (streak > 1) {
-                        trends.append("Tendencia continua: " + streak +
-                                " días consecutivos de " + trend + " ventas.\n");
+                        trends.append("Tendencia continua: " + streak
+                                + " días consecutivos de " + trend + " ventas.\n");
                     }
                     streak = 1;  // Nueva racha de disminución
                     trend = "Disminución";
-                    trends.append("Día " + (day + 1) + ": Disminución de ventas.\n");
+                    trends.append("Día " + (day + 1) + ": Disminución de ventas.\n"); // Mostrar disminución
+                    // Sugerir reducción de stock
+                    trends.append("Sugerencia: Considere reducir el stock debido a la disminución de ventas.\n");
                 }
             } else {
                 // Ventas constantes
@@ -168,17 +160,18 @@ public class RecursiveSalesAnalysis {
                     streak++;  // Continuar la racha de ventas constantes
                 } else {
                     if (streak > 1) {
-                        trends.append("Tendencia continua: " + streak +
-                                " días consecutivos de " + trend + " ventas.\n");
+                        trends.append("Tendencia continua: " + streak
+                                + " días consecutivos de " + trend + " ventas.\n");
                     }
                     streak = 1;  // Nueva racha de constante
                     trend = "Constante";
-                    trends.append("Día " + (day + 1) + ": Ventas constantes.\n");
+                    trends.append("Día " + (day + 1) + ": Ventas constantes.\n"); // Mostrar constante
+                    // Sin sugerencia de stock para ventas constantes
                 }
             }
         }
 
-        // Llamar de nuevo a la recursión para el siguiente día
+        // Recursión para el siguiente día
         detectTrendRecursive(productName, day + 1, totalSales, streak, trend, trends);
     }
 
@@ -195,8 +188,7 @@ public class RecursiveSalesAnalysis {
 
         // Leer el archivo de ventas y buscar las ventas para el día y
         // producto específico
-        try (BufferedReader reader = new BufferedReader
-        (new FileReader("SalesRegister.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Comprobar si la línea corresponde al producto y al día que
