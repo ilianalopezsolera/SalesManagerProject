@@ -5,10 +5,13 @@
 package salesmanager;
 
 /**
+ * This class implements recursive methods. Calculate average sales over a
+ * specific period of time and analyze trends
  *
  * @author yilei
  */
 public class RecursiveSalesAnalysis {
+
     private SaleManagement saleManagement;
 
     public RecursiveSalesAnalysis(SaleManagement saleManagement) {
@@ -16,25 +19,24 @@ public class RecursiveSalesAnalysis {
     }
 
     // Calcular promedio de ventas para un producto entre un rango de días (con recursión)
-    public double calculateAverageSales(String productName, int startDay, 
+    public double calculateAverageSales(String productName, int startDay,
             int endDay) {
         return calculateAverageSalesRecursive(productName, startDay, endDay, 0, 0);
     }
 
-    private double calculateAverageSalesRecursive(String productName, int 
-            startDay, int endDay, int totalSales, int count) {
+    private double calculateAverageSalesRecursive(String productName, int startDay, int endDay, int totalSales, int count) {
         if (startDay > endDay) {
             return count == 0 ? 0 : (double) totalSales / count;  // Evitar división por 0 si no hay ventas
         }
-        
+
         int dailySales = 0;
-        try{
-            dailySales= Integer.parseInt(saleManagement.getDailySalesSummary(
+        try {
+            dailySales = Integer.parseInt(saleManagement.getDailySalesSummary(
                     startDay, productName));
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.out.println("Error");
         }
-               
+
         return calculateAverageSalesRecursive(productName, startDay + 1, endDay, totalSales + dailySales, count + 1);  // Recursión
     }
 
@@ -44,17 +46,17 @@ public class RecursiveSalesAnalysis {
     }
 
     private void detectTrendRecursive(String productName, int day, int prevSales) {
-        if (day >= 30) return;  // Fin de los días (30 días en total)
-        
+        if (day >= 30) {
+            return;  // Fin de los días (30 días en total)
+        }
         int totalSales = 0;
-        try{
-            totalSales= Integer.parseInt(saleManagement.getDailySalesSummary(
-                    day, productName) );
-        }catch (NumberFormatException e){
+        try {
+            totalSales = Integer.parseInt(saleManagement.getDailySalesSummary(
+                    day, productName));
+        } catch (NumberFormatException e) {
             System.out.println("Error");
         }
-       
-        
+
         // Comparar con las ventas del día anterior para detectar tendencias
         if (prevSales != -1) {
             if (totalSales > prevSales) {
@@ -63,12 +65,9 @@ public class RecursiveSalesAnalysis {
                 System.out.println("Día " + (day + 1) + ": Disminución de ventas.");
             }
         }
-        
+
         // Llamada recursiva para el siguiente día
         detectTrendRecursive(productName, day + 1, totalSales);
     }
-    
-    
-    
-   
+
 }

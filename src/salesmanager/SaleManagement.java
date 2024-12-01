@@ -4,7 +4,13 @@
  */
 package salesmanager;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
+ * This class allows for better handling of sales through arrangements. Record
+ * sales in a file and add up the number of sales.
  *
  * @author yilei
  */
@@ -20,7 +26,7 @@ public class SaleManagement {
         "Máscara de pestañas",
         "Gel para cejas",
         "Tinta de labios"
-    }; // Arreglo para manejar productos de una tienda de maquillaje
+    }; // Arreglo para manejar productos de la tienda 
 
     private int[][][] sales; // Almacena de esta manera: [día][producto][canal]
 
@@ -28,7 +34,7 @@ public class SaleManagement {
 
     public SaleManagement() {
         sales = new int[30][productNames.length][2];
-    }//30 días del mes, productos, 2 tipos de canales
+    }
 
     /**
      * This method allows to register a sale. The index will help the graphical
@@ -44,40 +50,82 @@ public class SaleManagement {
         try {
             int productIndex = getProductIndex(productName);
             if (productIndex != -1 && day >= 0 && day < 30) {
-                sales[day][productIndex][channel] += quantity; // Acumula las ventas
-                // Guardar la venta en un archivo de texto
-                persistenceManager.saveSaleToFile(day, productName, channel, quantity);
+                sales[day][productIndex][channel] += quantity;
+                persistenceManager.saveSaleToFile(day, productName, channel,
+                        quantity);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Obtener ventas totales de un producto en un día (físico + online)
+    /**
+     * This method calculates all sales recorded in a file for a specific
+     * product and day according to the type of channel.
+     *
+     * @param day
+     * @param productName
+     * @return
+     */
     public String getDailySalesSummary(int day, String productName) {
-        int productIndex = getProductIndex(productName);
-        if (productIndex != -1 && day >= 0 && day < 30) {
-            int physicalSales = sales[day][productIndex][0];
-            int onlineSales = sales[day][productIndex][1];
-            return "Día " + (day + 1) + ": " + productName + " - Tienda: "
-                    + physicalSales + ", Online: " + onlineSales;
+        int totalPhysicalSales = 0;
+        int totalOnlineSales = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader
+        ("SalesRegister.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Día " + day + ":")) {
+                    String[] parts = line.split(", ");
+                    String recordedProduct = parts[0].split(": ")[1];
+                    String channel = parts[1].split(": ")[1];
+                    int quantity = Integer.parseInt(parts[2].split(": ")[1]);
+
+                    if (recordedProduct.equals(productName)) {
+                        if (channel.equalsIgnoreCase("Físico")) {
+                            totalPhysicalSales += quantity;
+                        } else if (channel.equalsIgnoreCase("En línea")) {
+                            totalOnlineSales += quantity;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            return "Error al leer el archivo de ventas: " + e.getMessage();
         }
-        return "No se encontraron datos para el producto o el día especificado.";
+
+        if (totalPhysicalSales == 0 && totalOnlineSales == 0) {
+            return "No se encontraron ventas para el producto o el día "
+                    + "especificado.";
+        }
+
+        return "Día " + day + ": " + productName + " - Tienda: "
+                + totalPhysicalSales + ", En línea: " + totalOnlineSales;
     }
 
-    // Obtener todos los nombres de productos
+    /**
+     * This method allows you to get the product names for the interface.
+     *
+     * @return
+     */
     public String[] getProductNames() {
         return productNames;
     }
 
-    // Obtener el índice de un producto por su nombre
+    /**
+     * This method allows you to obtain the index of the product by name for the
+     * graphical interface
+     *
+     * @param productName
+     * @return
+     */
     private int getProductIndex(String productName) {
         for (int i = 0; i < productNames.length; i++) {
             if (productNames[i].equals(productName)) {
                 return i;
             }
         }
-        return -1;
+        return -1;// En caso de que no lo encuentre
     }
 
 }

@@ -9,16 +9,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
+ * Class to handle the file that contains a record of sales.
  *
  * @author yilei
  */
 public class Files {
+
     /**
      * This method allows save a register in the file
+     *
      * @param day
      * @param productName
      * @param channel
-     * @param quantity 
+     * @param quantity
      */
     public void saveSaleToFile(int day, String productName, int channel,
             int quantity) {

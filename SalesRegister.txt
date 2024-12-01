@@ -1,1 +1,3 @@
 Día 1: Base líquida, Canal: Físico, Cantidad: 10
+Día 1: Base líquida, Canal: Físico, Cantidad: 15
+Día 1: Base líquida, Canal: En Línea, Cantidad: 10
