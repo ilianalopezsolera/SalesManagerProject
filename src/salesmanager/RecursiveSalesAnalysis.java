@@ -116,9 +116,11 @@ public class RecursiveSalesAnalysis {
         // Obtener las ventas del día para el producto especificado
         int totalSales = getTotalSalesForDay(productName, day);
 
-        // Si no hay ventas para ese día y producto, simplemente pasamos al siguiente día
+        // Si no hay ventas para ese día y producto, simplemente pasamos
+        // al siguiente día
         if (totalSales == 0) {
-            detectTrendRecursive(productName, day + 1, prevSales, streak, trend, trends);
+            detectTrendRecursive(productName, day + 1, prevSales, streak, trend,
+                    trends);
             return;
         }
 
@@ -135,9 +137,10 @@ public class RecursiveSalesAnalysis {
                     }
                     streak = 1;  // Nueva racha de incremento
                     trend = "Incremento";
-                    trends.append("Día " + (day + 1) + ": Incremento de ventas.\n"); // Mostrar incremento
+                    trends.append("Día " + (day + 1) + ": Incremento de ventas.\n"); 
                     // Sugerir reposición de stock
-                    trends.append("Sugerencia: Considere reponer el stock de este producto debido al aumento de ventas.\n");
+                    trends.append("Sugerencia: Considere reponer el stock de "
+                            + "este producto debido al aumento de ventas.\n");
                 }
             } else if (totalSales < prevSales) {
                 // Disminución de ventas
@@ -150,9 +153,10 @@ public class RecursiveSalesAnalysis {
                     }
                     streak = 1;  // Nueva racha de disminución
                     trend = "Disminución";
-                    trends.append("Día " + (day + 1) + ": Disminución de ventas.\n"); // Mostrar disminución
+                    trends.append("Día " + (day + 1) + ": Disminución de ventas.\n"); 
                     // Sugerir reducción de stock
-                    trends.append("Sugerencia: Considere reducir el stock debido a la disminución de ventas.\n");
+                    trends.append("Sugerencia: Considere reducir el stock debido"
+                            + " a la disminución de ventas o hacer promociones.\n");
                 }
             } else {
                 // Ventas constantes
@@ -165,7 +169,7 @@ public class RecursiveSalesAnalysis {
                     }
                     streak = 1;  // Nueva racha de constante
                     trend = "Constante";
-                    trends.append("Día " + (day + 1) + ": Ventas constantes.\n"); // Mostrar constante
+                    trends.append("Día " + (day + 1) + ": Ventas constantes.\n"); 
                     // Sin sugerencia de stock para ventas constantes
                 }
             }
@@ -188,7 +192,8 @@ public class RecursiveSalesAnalysis {
 
         // Leer el archivo de ventas y buscar las ventas para el día y
         // producto específico
-        try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
+        try (BufferedReader reader = new BufferedReader
+        (new FileReader("SalesRegister.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Comprobar si la línea corresponde al producto y al día que

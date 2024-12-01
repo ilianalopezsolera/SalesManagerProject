@@ -5,11 +5,10 @@ import java.awt.event.*;
 import java.awt.*;
 
 /**
- * Represents a sales management system with a graphical user interface for the 
- * Mar Rosa Brand store.
- * Allows users to register sales, calculate sales averages, detect trends, and 
- * view total sales.
- * 
+ * Represents a sales management system with a graphical user interface for the
+ * Mar Rosa Brand store. Allows users to register sales, calculate sales
+ * averages, detect trends, and view total sales.
+ *
  * @author Meylin Lopez
  * @author Yileidy Granados
  */
@@ -23,8 +22,7 @@ public class SalesManager {
     private SaleManagement salesData;
     private RecursiveSalesAnalysis salesAnalysis;
 
-    public SalesManager(SaleManagement salesData, RecursiveSalesAnalysis 
-            salesAnalysis) {
+    public SalesManager(SaleManagement salesData, RecursiveSalesAnalysis salesAnalysis) {
         this.salesData = salesData;
         this.salesAnalysis = salesAnalysis;
         initialize();
@@ -33,7 +31,7 @@ public class SalesManager {
     /**
      * Initializes and configures the store's graphical interface.
      */
-    private void initialize() {
+    public void initialize() {
         //Nombra la ventana con el nombre de la tienda
         frame = new JFrame("Mar Rosa Brand");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,10 +40,9 @@ public class SalesManager {
         frame.getContentPane().setBackground(new Color(255, 228, 225));
 
         //Agrega el logo de la tienda en la interfaz
-        ImageIcon logoIcon = new ImageIcon("C:\\Users\\yilei\\Pictures\\"
-                + "MarRosaIcon.png");
-        Image scaledImage = logoIcon.getImage().getScaledInstance(190, 90,
-                Image.SCALE_SMOOTH);
+        ImageIcon logoIcon = new ImageIcon("MarRosa.png");
+        Image scaledImage = logoIcon.getImage().getScaledInstance
+        (190, 90, Image.SCALE_SMOOTH);
         ImageIcon originalIcon = new ImageIcon(scaledImage);
 
         JLabel logoLabel = new JLabel(originalIcon);
@@ -75,15 +72,15 @@ public class SalesManager {
         JButton registerSaleButton = new JButton("Registrar venta");
         registerSaleButton.setBackground(new Color(199, 21, 133));
         registerSaleButton.setForeground(Color.BLACK);
-        
+
         JButton showAverageButton = new JButton("Promedio de Ventas");
         showAverageButton.setBackground(new Color(199, 21, 133));
         showAverageButton.setForeground(Color.BLACK);
-        
+
         JButton detectTrendsButton = new JButton("Detectar Tendencias");
         detectTrendsButton.setBackground(new Color(199, 21, 133));
         detectTrendsButton.setForeground(Color.BLACK);
-        
+
         JButton totalButton = new JButton("Total de ventas");
         totalButton.setBackground(new Color(199, 21, 133));
         totalButton.setForeground(Color.BLACK);
@@ -117,8 +114,7 @@ public class SalesManager {
              */
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String productName = (String) 
-                            productComboBox.getSelectedItem();
+                    String productName = (String) productComboBox.getSelectedItem();
                     int channel = channelComboBox.getSelectedIndex();
                     int quantity = Integer.parseInt(quantityField.getText());
                     int day = Integer.parseInt(JOptionPane.showInputDialog(
@@ -127,10 +123,10 @@ public class SalesManager {
                     salesData.registerSale(day - 1, productName, channel,
                             quantity);
                     salesTextArea.append("Venta registrada: " + productName
-                            + ", Canal: " + (channel == 0 ? "Físico" : 
-                                    "En Línea")
-                            + ", Cantidad: " + quantity + ", Día: " + day +
-                            "\n");
+                            + ", Canal: " + (channel == 0 ? "Físico"
+                                    : "En Línea")
+                            + ", Cantidad: " + quantity + ", Día: " + day
+                            + "\n");
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame,
                             "Por favor ingresa un número válido para la "
@@ -144,8 +140,7 @@ public class SalesManager {
         showAverageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String productName = (String) 
-                            productComboBox.getSelectedItem();
+                    String productName = (String) productComboBox.getSelectedItem();
                     int startDay = Integer.parseInt(JOptionPane.showInputDialog(
                             frame, "Ingresa el día de inicio (1-30):"));
                     int endDay = Integer.parseInt(JOptionPane.showInputDialog(
@@ -153,7 +148,7 @@ public class SalesManager {
 
                     double averageSales = salesAnalysis.calculateAverageSales(
                             startDay - 1, endDay - 1);
-                    salesTextArea.append("Promedio de ventas entre el día " 
+                    salesTextArea.append("Promedio de ventas entre el día "
                             + startDay + " y el día "
                             + endDay + ": " + averageSales + "\n");
                 } catch (NumberFormatException ex) {
@@ -170,9 +165,8 @@ public class SalesManager {
                 String productName = (String) productComboBox.getSelectedItem();
                 salesTextArea.append("Detectando tendencias para el producto: "
                         + productName + "\n");
-               // salesAnalysis.detectTrends(productName);
-               salesTextArea.append(salesAnalysis.detectTrends
-        (productName));
+                // salesAnalysis.detectTrends(productName);
+                salesTextArea.append(salesAnalysis.detectTrends(productName));
             }
         });
 
@@ -193,8 +187,7 @@ public class SalesManager {
                         return;
                     }
 
-                    String productName = (String) 
-                            productComboBox.getSelectedItem();
+                    String productName = (String) productComboBox.getSelectedItem();
 
                     String result = salesData.getDailySalesSummary(day,
                             productName);
