@@ -68,7 +68,8 @@ public class SaleManagement {
         int totalPhysicalSales = 0;
         int totalOnlineSales = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
+        try (BufferedReader reader = new BufferedReader
+        (new FileReader("SalesRegister.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Día " + day + ":")) {
@@ -112,7 +113,8 @@ public class SaleManagement {
     public int getTotalSales(int day, String productName) {
         int totalSales = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
+        try (BufferedReader reader = new BufferedReader
+        (new FileReader("SalesRegister.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Día " + day + ":")) {
@@ -132,10 +134,26 @@ public class SaleManagement {
         return totalSales; // Total de ventas (puede ser 0 si no hay datos)
     }
 
+    /**
+     * Retrieves the total sales for a specific product on a given day by
+     * summing both physical and online sales.
+     *
+     * This method first identifies the index of the specified product, and if
+     * the product is found, it calculates the total sales for that day by
+     * adding the physical and online sales data.
+     *
+     * @param productName The name of the product for which sales data is being
+     * retrieved.
+     * @param day The day (0-based index) for which sales data is to be fetched.
+     * @return The total sales for the specified product on the given day,
+     * including both physical and online sales. If the product is not found, it
+     * returns 0.
+     */
     public int getTotalSalesForDay(String productName, int day) {
         int productIndex = getProductIndex(productName);
         if (productIndex != -1) {
-            return sales[day][productIndex][0] + sales[day][productIndex][1]; // Sumar ventas físicas y en línea
+            // Sumar ventas físicas y en línea
+            return sales[day][productIndex][0] + sales[day][productIndex][1];
         }
         return 0;
     }
