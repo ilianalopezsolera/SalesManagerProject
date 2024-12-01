@@ -5,10 +5,13 @@ import java.awt.event.*;
 import java.awt.*;
 
 /**
- * Main class to handle a sale. Contains the code to be able to run the custom
- * GUI for a store
- *
- * @author ilico
+ * Represents a sales management system with a graphical user interface for the 
+ * Mar Rosa Brand store.
+ * Allows users to register sales, calculate sales averages, detect trends, and 
+ * view total sales.
+ * 
+ * @author Meylin Lopez
+ * @author Yileidy Granados
  */
 public class SalesManager {
 
@@ -20,7 +23,8 @@ public class SalesManager {
     private SaleManagement salesData;
     private RecursiveSalesAnalysis salesAnalysis;
 
-    public SalesManager(SaleManagement salesData, RecursiveSalesAnalysis salesAnalysis) {
+    public SalesManager(SaleManagement salesData, RecursiveSalesAnalysis 
+            salesAnalysis) {
         this.salesData = salesData;
         this.salesAnalysis = salesAnalysis;
         initialize();
@@ -113,7 +117,8 @@ public class SalesManager {
              */
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String productName = (String) productComboBox.getSelectedItem();
+                    String productName = (String) 
+                            productComboBox.getSelectedItem();
                     int channel = channelComboBox.getSelectedIndex();
                     int quantity = Integer.parseInt(quantityField.getText());
                     int day = Integer.parseInt(JOptionPane.showInputDialog(
@@ -122,8 +127,10 @@ public class SalesManager {
                     salesData.registerSale(day - 1, productName, channel,
                             quantity);
                     salesTextArea.append("Venta registrada: " + productName
-                            + ", Canal: " + (channel == 0 ? "Físico" : "En Línea")
-                            + ", Cantidad: " + quantity + ", Día: " + day + "\n");
+                            + ", Canal: " + (channel == 0 ? "Físico" : 
+                                    "En Línea")
+                            + ", Cantidad: " + quantity + ", Día: " + day +
+                            "\n");
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame,
                             "Por favor ingresa un número válido para la "
@@ -137,7 +144,8 @@ public class SalesManager {
         showAverageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String productName = (String) productComboBox.getSelectedItem();
+                    String productName = (String) 
+                            productComboBox.getSelectedItem();
                     int startDay = Integer.parseInt(JOptionPane.showInputDialog(
                             frame, "Ingresa el día de inicio (1-30):"));
                     int endDay = Integer.parseInt(JOptionPane.showInputDialog(
@@ -145,7 +153,8 @@ public class SalesManager {
 
                     double averageSales = salesAnalysis.calculateAverageSales(
                             startDay - 1, endDay - 1);
-                    salesTextArea.append("Promedio de ventas entre el día " + startDay + " y el día "
+                    salesTextArea.append("Promedio de ventas entre el día " 
+                            + startDay + " y el día "
                             + endDay + ": " + averageSales + "\n");
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame, "Por favor ingresa un "
@@ -162,7 +171,8 @@ public class SalesManager {
                 salesTextArea.append("Detectando tendencias para el producto: "
                         + productName + "\n");
                // salesAnalysis.detectTrends(productName);
-               salesTextArea.append("Tendencias: " + salesAnalysis.detectTrends(productName));
+               salesTextArea.append("Tendencias: " + salesAnalysis.detectTrends
+        (productName));
             }
         });
 
@@ -183,7 +193,8 @@ public class SalesManager {
                         return;
                     }
 
-                    String productName = (String) productComboBox.getSelectedItem();
+                    String productName = (String) 
+                            productComboBox.getSelectedItem();
 
                     String result = salesData.getDailySalesSummary(day,
                             productName);

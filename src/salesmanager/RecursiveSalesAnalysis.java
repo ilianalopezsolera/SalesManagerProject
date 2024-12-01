@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package salesmanager;
 
 import java.io.BufferedReader;
@@ -12,7 +8,8 @@ import java.io.IOException;
  * This class implements recursive methods. Calculate average sales over a
  * specific period of time and analyze trends
  *
- * @author yilei
+ * @author Yilei Granados
+ * @author Meylin Lopez
  */
 public class RecursiveSalesAnalysis {
 
@@ -22,10 +19,31 @@ public class RecursiveSalesAnalysis {
         this.saleManagement = saleManagement;
     }
 
+    /**
+     * Calculates the average sales between two specified days recursively. This
+     * method initializes the recursive process.
+     *
+     * @param startDay The starting day (inclusive) for the average calculation.
+     * @param endDay The ending day (exclusive) for the average calculation.
+     * @return The average sales between the specified days. Returns 0.0 if no
+     * sales are recorded.
+     */
     public double calculateAverageSales(int startDay, int endDay) {
         return calculateAverageSales(startDay, endDay, 0, 0);
     }
 
+    /**
+     * Calculates the average sales between two specified days using recursion.
+     * This method processes the sales data for each day within the range and
+     * accumulates the values.
+     *
+     * @param startDay The current day being processed in the recursion.
+     * @param endDay The ending day (exclusive) for the average calculation.
+     * @param totalSales Accumulator for the sum of sales processed so far.
+     * @param count Accumulator for the count of days processed so far.
+     * @return The average sales between the specified days. Returns 0.0 if no
+     * sales are recorded.
+     */
     public double calculateAverageSales(int startDay, int endDay, int totalSales, int count) {
         // Base de la recursión
         if (startDay >= endDay) {
@@ -49,13 +67,36 @@ public class RecursiveSalesAnalysis {
         }
     }
 
-    // Detectar tendencias de ventas para un producto (aumento o disminución)
+    /**
+     * Detects sales trends for a specific product over a month (30 days) and
+     * returns a summary. This method initializes the recursive trend detection
+     * process.
+     *
+     * @param productName The name of the product to analyze trends for.
+     * @return A string summarizing the trends, including increases, decreases,
+     * and consistent sales.
+     */
     public String detectTrends(String productName) {
         StringBuilder trends = new StringBuilder();
         detectTrendRecursive(productName, 0, -1, 0, "", trends);  // Inicia la recursión
         return trends.toString();
     }
 
+    /**
+     * Recursively detects sales trends for a specific product over the given
+     * period.
+     *
+     * @param productName The name of the product to analyze trends for.
+     * @param day The current day being analyzed (0-based index for days).
+     * @param prevSales The sales total for the previous day. Used to determine
+     * trends.
+     * @param streak The current streak of consecutive days for a particular
+     * trend.
+     * @param trend The current trend (e.g., "Increase", "Decrease", or
+     * "Constant").
+     * @param trends A StringBuilder used to accumulate descriptions of detected
+     * trends.
+     */
     public void detectTrendRecursive(String productName, int day, int prevSales, int streak, String trend, StringBuilder trends) {
         if (day >= 30) {
             // Al final del mes, imprime las tendencias acumuladas
@@ -117,8 +158,16 @@ public class RecursiveSalesAnalysis {
 
         detectTrendRecursive(productName, day + 1, totalSales, streak, trend, trends);
     }
-        // Método que obtiene las ventas para un producto específico en un día dado
-    private int getTotalSalesForDay(String productName, int day) {
+
+    /**
+     * Retrieves the total sales for a specific product on a given day.
+     *
+     * @param productName The name of the product to retrieve sales for.
+     * @param day The day to retrieve sales for (0-based index for days).
+     * @return The total sales for the product on the specified day. Returns 0
+     * if no sales are found.
+     */
+    public int getTotalSalesForDay(String productName, int day) {
         int totalSales = 0;
 
         // Leer el archivo de ventas y buscar las ventas para el día y producto específico

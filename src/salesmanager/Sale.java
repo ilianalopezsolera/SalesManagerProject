@@ -3,7 +3,8 @@ package salesmanager;
 /**
  * Class for sale. It contains attributes and constructors.
  *
- * @author ilico
+ * @author Meylin Lopez
+ * @author Yileidy Granados
  */
 public class Sale {
 

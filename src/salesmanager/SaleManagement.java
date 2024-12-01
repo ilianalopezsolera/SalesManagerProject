@@ -12,7 +12,8 @@ import java.io.IOException;
  * This class allows for better handling of sales through arrangements. Record
  * sales in a file and add up the number of sales.
  *
- * @author yilei
+ * @author Yilei Granados
+ * @author Meylin Lopez
  */
 public class SaleManagement {
 
@@ -32,7 +33,7 @@ public class SaleManagement {
 
     private Files persistenceManager = new Files();
 
-    public SaleManagement() {
+    SaleManagement() {
         sales = new int[30][productNames.length][2];
     }
 
@@ -102,6 +103,16 @@ public class SaleManagement {
                 + totalPhysicalSales + ", En línea: " + totalOnlineSales;
     }
 
+    /**
+     * Retrieves the total sales for a specific day and product from the sales
+     * register file.
+     *
+     * @param day The day for which sales are to be retrieved.
+     * @param productName The name of the product to filter sales. If null,
+     * sales for all products will be retrieved.
+     * @return The total sales for the specified day and product. Returns 0 if
+     * no sales are found or if an error occurs.
+     */
     public int getTotalSales(int day, String productName) {
         int totalSales = 0;
 
