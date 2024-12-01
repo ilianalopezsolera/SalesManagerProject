@@ -4,6 +4,10 @@
  */
 package salesmanager;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * This class implements recursive methods. Calculate average sales over a
  * specific period of time and analyze trends
@@ -46,60 +50,96 @@ public class RecursiveSalesAnalysis {
     }
 
     // Detectar tendencias de ventas para un producto (aumento o disminución)
-    public void detectTrends(String productName) {
-        detectTrendRecursive(productName, 0, -1, 0, "");  // Inicia la recursión desde el primer día
+    public String detectTrends(String productName) {
+        StringBuilder trends = new StringBuilder();
+        detectTrendRecursive(productName, 0, -1, 0, "", trends);  // Inicia la recursión
+        return trends.toString();
     }
 
-    private void detectTrendRecursive(String productName, int day, int prevSales, int streak, String trend) {
+    public void detectTrendRecursive(String productName, int day, int prevSales, int streak, String trend, StringBuilder trends) {
         if (day >= 30) {
             // Al final del mes, imprime las tendencias acumuladas
             if (streak > 1) {
-                System.out.println("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.");
+                trends.append("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.\n");
             }
-            return;  // Fin de los días (30 días en total)
+            return;
         }
 
-        int totalSales = 0;
-        try {
-            // Obtener las ventas del día para el producto especificado
-            totalSales = Integer.parseInt(saleManagement.getDailySalesSummary(day, productName));
-        } catch (NumberFormatException e) {
-            System.out.println("Error al obtener ventas del día " + (day + 1) + " para el producto: " + productName);
+        // Obtener las ventas del día para el producto especificado
+        int totalSales = getTotalSalesForDay(productName, day);
+
+        // Si no hay ventas para ese día y producto, simplemente pasamos al siguiente día
+        if (totalSales == 0) {
+            detectTrendRecursive(productName, day + 1, prevSales, streak, trend, trends);
+            return;
         }
 
         // Detectar cambios en las ventas: aumento, disminución o constante
         if (prevSales != -1) {
             if (totalSales > prevSales) {
+                // Aumento de ventas
                 if (trend.equals("Incremento")) {
                     streak++;  // Continuar la racha de incremento
                 } else {
                     if (streak > 1) {
-                        System.out.println("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.");
+                        trends.append("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.\n");
                     }
                     streak = 1;  // Nueva racha de incremento
                     trend = "Incremento";
+                    trends.append("Día " + (day + 1) + ": Incremento de ventas.\n"); // Mostrar incremento
                 }
             } else if (totalSales < prevSales) {
+                // Disminución de ventas
                 if (trend.equals("Disminución")) {
                     streak++;  // Continuar la racha de disminución
                 } else {
                     if (streak > 1) {
-                        System.out.println("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.");
+                        trends.append("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.\n");
                     }
                     streak = 1;  // Nueva racha de disminución
                     trend = "Disminución";
+                    trends.append("Día " + (day + 1) + ": Disminución de ventas.\n"); // Mostrar disminución
                 }
             } else {
                 // Ventas constantes
-                if (streak > 1) {
-                    System.out.println("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.");
+                if (trend.equals("Constante")) {
+                    streak++;  // Continuar la racha de ventas constantes
+                } else {
+                    if (streak > 1) {
+                        trends.append("Tendencia continua: " + streak + " días consecutivos de " + trend + " ventas.\n");
+                    }
+                    streak = 1;  // Nueva racha de constante
+                    trend = "Constante";
+                    trends.append("Día " + (day + 1) + ": Ventas constantes.\n"); // Mostrar constante
                 }
-                streak = 1;  // Racha de ventas constantes
-                trend = "Constante";
             }
         }
 
-        // Llamada recursiva para el siguiente día
-        detectTrendRecursive(productName, day + 1, totalSales, streak, trend);
+        detectTrendRecursive(productName, day + 1, totalSales, streak, trend, trends);
+    }
+        // Método que obtiene las ventas para un producto específico en un día dado
+    private int getTotalSalesForDay(String productName, int day) {
+        int totalSales = 0;
+
+        // Leer el archivo de ventas y buscar las ventas para el día y producto específico
+        try (BufferedReader reader = new BufferedReader(new FileReader("SalesRegister.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Comprobar si la línea corresponde al producto y al día que estamos buscando
+                if (line.startsWith("Día " + (day + 1) + ":") && line.contains(productName)) {
+                    String[] parts = line.split(", ");
+                    String recordedProduct = parts[0].split(": ")[1];
+                    int quantity = Integer.parseInt(parts[2].split(": ")[1]);
+
+                    if (recordedProduct.equals(productName)) {
+                        totalSales += quantity;  // Sumar las ventas de ese producto
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de ventas: " + e.getMessage());
+        }
+
+        return totalSales;
     }
 }

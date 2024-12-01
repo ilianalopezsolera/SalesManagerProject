@@ -113,10 +113,8 @@ public class SaleManagement {
                     String recordedProduct = parts[0].split(": ")[1];
                     int quantity = Integer.parseInt(parts[2].split(": ")[1]);
 
-                    // Si no se especifica producto, sumar todas las ventas
-                    if (productName == null || recordedProduct.equals(productName)) {
-                        totalSales += quantity;
-                    }
+                    totalSales += quantity;
+
                 }
             }
         } catch (IOException e) {

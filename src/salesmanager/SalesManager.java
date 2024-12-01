@@ -161,7 +161,8 @@ public class SalesManager {
                 String productName = (String) productComboBox.getSelectedItem();
                 salesTextArea.append("Detectando tendencias para el producto: "
                         + productName + "\n");
-                salesAnalysis.detectTrends(productName);
+               // salesAnalysis.detectTrends(productName);
+               salesTextArea.append("Tendencias: " + salesAnalysis.detectTrends(productName));
             }
         });
 
